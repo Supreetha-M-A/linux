@@ -25,6 +25,88 @@
 #include "trace.h"
 #include "pmu.h"
 
+#include <vmx/vmx.h>
+//Assignment 2 : Start
+uint64_t total_exit_count=0;
+uint64_t exit_count[69] = {0};
+EXPORT_SYMBOL(total_exit_count);
+EXPORT_SYMBOL(exit_count);
+//exit name: start
+static char exit_name[69][100] = {
+	"EXCEPTION_NMI",
+	"EXCEPTION_INTERRUPT",
+	"TRIPLE_FAULT",
+	"INIT_SIGNAL_NA",
+	"STARTUP_IPI_NA",
+	"SMI_INTERRUPT_NA",
+	"EOI_INDUCED",
+	"PENDING_INTERRUPT",
+	"NMI_WINDOW",
+	"TASK_SWITCH",
+	"CPUID",
+	"GETSEC_NA",
+	"HLT",
+	"INVD",
+	"INVLPG",
+	"RDPMC",
+	"RDTSC_NA",
+	"RSM_NA",
+	"VMCALL",
+	"VMCLEAR",
+	"VMLAUNCH",
+	"VMPTRLD",
+	"VMPTRST",
+	"VMREAD",
+	"VMRESUME",
+	"VMWRITE",
+	"VMOFF",
+	"VMON",
+	"CR_ACCESS",
+	"DR_ACCESS",
+	"IO_INSTRUCTION",
+	"MSR_READ",
+	"MSR_WRITE",
+	"VM_ENTRY_FAILURE_INVALID_GUEST_NA",
+	"VM_ENTRY_FAILURE_MSR_LOADING_NA",
+	"INVALID_VALUE",
+	"MWAIT_INSTRUCTION",
+	"MONITOR_TRAP_FLAG",
+	"INVALID_VALUE",
+	"MONITOR_INSTRUCTION",
+	"PAUSE_INSTRUCTION",
+	"MCE_DURING_VMENTRY",
+	"INVALID_VALUE",
+	"TPR_BELOW_THRESHOLD",
+	"APIC_ACCESS",
+	"VIRTUALIZED_EOI_NA",
+	"GDTR_IDTR",
+	"LDTR_TR",
+	"EPT_VIOLATION",
+	"EPT_MISCONFIG",
+	"INVEPT",
+	"RDTSCP_NA",
+	"PREEMPTION_TIMER",
+	"INVVPID",
+	"WBINVD",
+	"XSETBV",
+	"APIC_WRITE",
+	"RDRAND",
+	"INVPCID",
+	"VMFUNC",
+	"ENCLS"
+	"RDSEED",
+	"PML_FULL",
+	"XSAVES_NA",
+	"XRESTORE_NA",
+	"INVALID_VALUE",
+	"SPP_RELATED_EVENT_NA"
+	"UM_WAIT_NA",
+	"TPAUSE_NA"
+};
+//exit name end
+//Assignment 2 : End
+
+
 /*
  * Unlike "struct cpuinfo_x86.x86_capability", kvm_cpu_caps doesn't need to be
  * aligned to sizeof(unsigned long) because it's not accessed via bitops.
@@ -1229,21 +1311,60 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
 	return exact;
 }
 EXPORT_SYMBOL_GPL(kvm_cpuid);
-
 int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 {
 	u32 eax, ebx, ecx, edx;
+	int i;
 
 	if (cpuid_fault_enabled(vcpu) && !kvm_require_cpl(vcpu, 0))
 		return 1;
 
 	eax = kvm_rax_read(vcpu);
 	ecx = kvm_rcx_read(vcpu);
-	kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, false);
+		
+	if(eax == 0x4FFFFFFF){
+		printk("i got inside 0x4FFFFFFF block");
+		kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, true);
+		eax=total_exit_count;
+		printk(KERN_INFO "-------------------------------------------------------------------------------------------");
+		printk(KERN_INFO "Total Exits :%llu\n",total_exit_count);
+		printk(KERN_INFO "-------------------------------------------------------------------------------------------");
+	}else if(eax == 0x4FFFFFFD){		
+		
+		printk(KERN_INFO "\tExit_Name\t\t\t\tExit No\t\tExit_count");
+		printk(KERN_INFO "-------------------------------------------------------------------------------------------");
+
+		for(i=0;i<69;i++){
+			if((strstr(exit_name[i], "_NA") == NULL) && (strstr(exit_name[i],"INVALID_VALUE") == NULL)){
+			printk(KERN_INFO "\t%s\t\t\t\t%llu\t\t%llu\n",exit_name[i],i,exit_count[i]);
+			}
+		}
+		if((int) ecx < 69 && (int) ecx > -1 && (strstr(exit_name[ecx], "_NA") == NULL) && (strstr(exit_name[ecx], 			"INVALID_VALUE") == NULL)){
+			eax=exit_count[ecx];
+		}
+		else if((strstr(exit_name[ecx], "_NA") != NULL)){
+			eax= 0x00000000;
+			ebx= 0x00000000;
+			ecx= 0x00000000;
+			edx= 0x00000000;
+		}
+		else{
+			eax= 0x00000000;
+			ebx= 0x00000000;
+			ecx= 0x00000000;
+			edx= 0xFFFFFFFF;
+		}
+
+	}
+	else{
+		kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, true);
+	}
 	kvm_rax_write(vcpu, eax);
 	kvm_rbx_write(vcpu, ebx);
 	kvm_rcx_write(vcpu, ecx);
 	kvm_rdx_write(vcpu, edx);
+
 	return kvm_skip_emulated_instruction(vcpu);
+
 }
 EXPORT_SYMBOL_GPL(kvm_emulate_cpuid);

@@ -68,6 +68,10 @@
 
 MODULE_AUTHOR("Qumranet");
 MODULE_LICENSE("GPL");
+//Start: Added for Assignment
+extern uint64_t exit_count[69];
+extern uint64_t total_exit_count;
+//end
 
 #ifdef MODULE
 static const struct x86_cpu_id vmx_cpu_id[] = {
@@ -5918,6 +5922,12 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
  */
 static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
 {
+	
+	printk(KERN_INFO "Inside VMX_handle_exit\n");
+	//start: Added for Assignment 2
+	int return_exit_handler=0; 
+	//end: added for assignment 2
+	
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	union vmx_exit_reason exit_reason = vmx->exit_reason;
 	u32 vectoring_info = vmx->idt_vectoring_info;
@@ -6060,7 +6070,21 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
 
 	exit_handler_index = array_index_nospec((u16)exit_reason.basic,
 						kvm_vmx_max_exit_handlers);
-	if (!kvm_vmx_exit_handlers[exit_handler_index])
+			
+
+	if (exit_reason < kvm_vmx_max_exit_handlers
+	    && kvm_vmx_exit_handlers[exit_reason]){
+
+//Start: Added for Assignment 2
+	
+		return_exit_handler = kvm_vmx_exit_handlers[exit_reason](vcpu);
+
+		exit_count[exit_reason]++;
+		total_exit_count++;
+
+//End: Added for assignment 2
+		return return_exit_handler;
+	}else if (!kvm_vmx_exit_handlers[exit_handler_index])
 		goto unexpected_vmexit;
 
 	return kvm_vmx_exit_handlers[exit_handler_index](vcpu);
