@@ -9,15 +9,22 @@
 ## 1. For each member in your team, provide 1 paragraph detailing what parts of the lab that member implemented / researched.
 1. Work done by Satish K:  
 •	Created leaf node %eax= 0x4FFFFFFF for case I
+
 •	Made required changes in cpuid.c and vmx.c
+
 •	Installed cpuid Pakage on inner VM
+
 •	Tested and Verified results
+
 •	Documented the steps and results.
  
 2. Work done by Supreetha M A:  
 •	Created leaf node %eax= 0x4FFFFFFD for case III
+
 •	Made required changes in cpuid.c and vmx.c
+
 •	Tested and Verified results
+
 •	Documented the steps and results.
 
 
