@@ -6,7 +6,7 @@
 
 ### Questions
 
-### 1. For each member in your team, provide 1 paragraph detailing what parts of the lab that member implemented / researched.
+### Q-1. For each member in your team, provide 1 paragraph detailing what parts of the lab that member implemented / researched.
 ##### Work done by Satish K:  
 1. Created leaf node %eax= 0x4FFFFFFF for case I
 2. Made required changes in cpuid.c and vmx.c
@@ -15,12 +15,13 @@
 5. Documented the steps and results.
  
 ##### Work done by Supreetha M A:  
-1.Created leaf node %eax= 0x4FFFFFFD for case III 
-2.Made required changes in cpuid.c and vmx.c 
-3.Tested and Verified results 
-4.Documented the steps and results. 
 
-## 2. Describe in detail the steps you used to complete the assignment. 
+1. Created leaf node %eax= 0x4FFFFFFD for case III 
+2. Made required changes in cpuid.c and vmx.c 
+3. Tested and Verified results
+4. Documented the steps and results.
+
+### Q-2. Describe in detail the steps you used to complete the assignment. 
 #### Prerequisites:  
 Need a working assignment 1 configuration.
  
@@ -57,14 +58,13 @@ Total exits taken for VM reboot: 677887
 3. Cupid -l 0x4FFFFFFD s -444 to test the output for invalid exit code.
 4. cupid -l 0x4FFFFFFD s -3 to test the output for valid exit but not implemented by KVM.
 
-## Question 3: Comment of the frequency of exits
-## Answer: 
+### Q-3: Comment of the frequency of exits
+### Answer: 
 Frequency of the exits are dependent on use of the system. If the system performs the more privileged operations, then the number of exits increases.
 
 
-## Question 4: Exit types defined in SDM, which are the most frequent and least frequent?
-
-## Answer: 
+### Q-4: Exit types defined in SDM, which are the most frequent and least frequent?
+### Answer: 
  Most frequent exit is MSR_WRITE with count 605825
  Least frequent exit is DR_ACCESS with count 8 (non-zero)
 
