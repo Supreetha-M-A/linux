@@ -4,9 +4,9 @@
 
 ##### By: Supreetha M A (ID: 015967003), Satish K (ID: 015351284)
 
-## Questions
+### Questions
 
-## 1. For each member in your team, provide 1 paragraph detailing what parts of the lab that member implemented / researched.
+### 1. For each member in your team, provide 1 paragraph detailing what parts of the lab that member implemented / researched.
 ##### Work done by Satish K:  
 1. Created leaf node %eax= 0x4FFFFFFF for case I
 2. Made required changes in cpuid.c and vmx.c
@@ -15,17 +15,16 @@
 5. Documented the steps and results.
  
 ##### Work done by Supreetha M A:  
-1.Created leaf node %eax= 0x4FFFFFFD for case III
-2.Made required changes in cpuid.c and vmx.c
-3.Tested and Verified results
-4.Documented the steps and results.
-
+1.Created leaf node %eax= 0x4FFFFFFD for case III 
+2.Made required changes in cpuid.c and vmx.c 
+3.Tested and Verified results 
+4.Documented the steps and results. 
 
 ## 2. Describe in detail the steps you used to complete the assignment. 
-####Prerequisites:  
+#### Prerequisites:  
 Need a working assignment 1 configuration.
  
-####Verified: 
+#### Verified: 
 Assignment I code is functional.
 
 ### Step 1: Add code to KVM at file /linux/arch/x86/kvm/vmx/vmx.c and /linux/arch/x86/kvm/cpuid.c
