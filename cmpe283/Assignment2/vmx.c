@@ -5923,11 +5923,8 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
 static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
 {
 	
-	printk(KERN_INFO "Inside VMX_handle_exit\n");
-	//start: Added for Assignment 2
-	int return_exit_handler=0; 
-	//end: added for assignment 2
-	
+	int return_exit_handler=0;
+	//printk(KERN_INFO "Inside VMX_handle_exit\n");	
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	union vmx_exit_reason exit_reason = vmx->exit_reason;
 	u32 vectoring_info = vmx->idt_vectoring_info;
@@ -6072,14 +6069,14 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
 						kvm_vmx_max_exit_handlers);
 			
 
-	if (exit_reason < kvm_vmx_max_exit_handlers
-	    && kvm_vmx_exit_handlers[exit_reason]){
+	if (exit_reason.basic < kvm_vmx_max_exit_handlers
+	    && kvm_vmx_exit_handlers[exit_reason.basic]){
 
 //Start: Added for Assignment 2
 	
-		return_exit_handler = kvm_vmx_exit_handlers[exit_reason](vcpu);
+		return_exit_handler = kvm_vmx_exit_handlers[exit_reason.basic](vcpu);
 
-		exit_count[exit_reason]++;
+		exit_count[exit_reason.basic]++;
 		total_exit_count++;
 
 //End: Added for assignment 2

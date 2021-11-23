@@ -1336,7 +1336,7 @@ int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 
 		for(i=0;i<69;i++){
 			if((strstr(exit_name[i], "_NA") == NULL) && (strstr(exit_name[i],"INVALID_VALUE") == NULL)){
-			printk(KERN_INFO "\t%s\t\t\t\t%llu\t\t%llu\n",exit_name[i],i,exit_count[i]);
+			printk(KERN_INFO "\t%s\t\t\t\t%u\t\t%llu\n",exit_name[i],i,exit_count[i]);
 			}
 		}
 		if((int) ecx < 69 && (int) ecx > -1 && (strstr(exit_name[ecx], "_NA") == NULL) && (strstr(exit_name[ecx], 			"INVALID_VALUE") == NULL)){
